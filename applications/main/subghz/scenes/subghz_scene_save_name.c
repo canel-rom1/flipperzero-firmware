@@ -89,13 +89,15 @@ bool subghz_scene_save_name_on_event(void* context, SceneManagerEvent event) {
         if(!(strcmp(subghz->file_name_tmp, "") == 0) ||
            scene_manager_get_scene_state(subghz->scene_manager, SubGhzSceneReadRAW) !=
                SubGhzCustomEventManagerNoSet) {
-            furi_string_set(subghz->file_path, subghz->file_path_tmp);
+            if(!subghz->in_decoder_scene) {
+                furi_string_set(subghz->file_path, subghz->file_path_tmp);
+            }
         }
         scene_manager_previous_scene(subghz->scene_manager);
         return true;
     } else if(event.type == SceneManagerEventTypeCustom) {
         if(event.event == SubGhzCustomEventSceneSaveName) {
-            if(strcmp(subghz->file_name_tmp, "")) {
+            if(strcmp(subghz->file_name_tmp, "") != 0) {
                 furi_string_cat_printf(
                     subghz->file_path, "/%s%s", subghz->file_name_tmp, SUBGHZ_APP_EXTENSION);
                 if(subghz_path_is_file(subghz->file_path_tmp)) {

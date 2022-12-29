@@ -330,7 +330,7 @@ static void rpc_system_storage_read_process(const PB_Main* request, void* contex
 
     rpc_system_storage_reset_state(rpc_storage, session, true);
 
-    /* use same message memory to send reponse */
+    /* use same message memory to send response */
     PB_Main* response = malloc(sizeof(PB_Main));
     const char* path = request->content.storage_read_request.path;
     Storage* fs_api = furi_record_open(RECORD_STORAGE);
@@ -597,7 +597,7 @@ static void rpc_system_storage_md5sum_process(const PB_Main* request, void* cont
         char* md5sum = response.content.storage_md5sum_response.md5sum;
         size_t md5sum_size = sizeof(response.content.storage_md5sum_response.md5sum);
         (void)md5sum_size;
-        furi_assert(hash_size <= ((md5sum_size - 1) / 2));
+        furi_assert(hash_size <= ((md5sum_size - 1) / 2)); //-V547
         for(uint8_t i = 0; i < hash_size; i++) {
             md5sum += snprintf(md5sum, md5sum_size, "%02x", hash[i]);
         }

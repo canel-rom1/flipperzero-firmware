@@ -55,9 +55,9 @@ void furi_hal_memory_init() {
         memory->region[SRAM_B].size = sram2b_unprotected_size;
 
         FURI_LOG_I(
-            TAG, "SRAM2A: 0x%p, %ld", memory->region[SRAM_A].start, memory->region[SRAM_A].size);
+            TAG, "SRAM2A: 0x%p, %lu", memory->region[SRAM_A].start, memory->region[SRAM_A].size);
         FURI_LOG_I(
-            TAG, "SRAM2B: 0x%p, %ld", memory->region[SRAM_B].start, memory->region[SRAM_B].size);
+            TAG, "SRAM2B: 0x%p, %lu", memory->region[SRAM_B].start, memory->region[SRAM_B].size);
 
         if((memory->region[SRAM_A].size > 0) || (memory->region[SRAM_B].size > 0)) {
             if((memory->region[SRAM_A].size > 0)) {
@@ -81,6 +81,10 @@ void furi_hal_memory_init() {
 }
 
 void* furi_hal_memory_alloc(size_t size) {
+    if(FURI_IS_IRQ_MODE()) {
+        furi_crash("memmgt in ISR");
+    }
+
     if(furi_hal_memory == NULL) {
         return NULL;
     }
